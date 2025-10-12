@@ -309,12 +309,15 @@
     const qs = new URLSearchParams(location.search);
     const rawName = qs.get('name') || '';
 
-    function prettifyName(n){
-      if(!n) return '';
-      try{ n = decodeURIComponent(n); }catch(e){}
-      n = n.replace(/\+/g,' ').trim();
-      if(!n) return '';
-      return n.replace(/([A-Za-zÀ-ÿ])([A-Za-zÀ-ÿ']*)/g, (m,a,b)=> a.toUpperCase()+b);
+    function prettifyName(n) {
+        if (!n) return '';
+        try { n = decodeURIComponent(n); } catch (e) {}
+        n = n.replace(/\+/g, ' ').trim();
+        if (!n) return '';
+        // Cleaned regex: capitalize each word properly
+        return n.replace(/\b([A-Za-zÀ-ÿ])([A-Za-zÀ-ÿ']*)/g, (m, a, b) => 
+        a.toUpperCase() + b.toLowerCase()
+        );
     }
 
     const guestName = prettifyName(rawName);
@@ -324,8 +327,10 @@
     const gateHint = document.getElementById('gateHint');
     const brandName = document.getElementById('brandName');
 
-    // Stage 1: poster only (no text). Stage 2: invite with overlay & greeting. Stage 3: reveal site.
-    let stage = 1; // 1=poster, 2=invite, 3=site
+    // Stage 1: poster only (no text)
+    // Stage 2: invite with overlay & greeting
+    // Stage 3: reveal site
+    let stage = 1; // 1 = poster, 2 = invite, 3 = site
 
     // Prepare texts if we have a name
     const greeting = guestName ? `Welcome, ${guestName}!` : '';
